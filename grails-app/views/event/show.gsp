@@ -1,0 +1,116 @@
+
+<%@ page import="ievent.Event" %>
+<!doctype html>
+<html>
+	<head>
+		<meta name="layout" content="main">
+		<g:set var="entityName" value="${message(code: 'event.label', default: 'Event')}" />
+		<title><g:message code="default.show.label" args="[entityName]" /></title>
+	</head>
+	<body>
+    <a href="#show-event" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
+    <div class="nav" role="navigation">
+        <ul>
+            <g:render template="/layouts/menu"/>
+        </ul>
+    </div>
+    <h1>${eventInstance.eventName}</h1>
+    <div class="nav" role="navigation">
+        <g:render template="/layouts/eventMenu"/>
+    </div>
+    <div id="layout_dos_columnas" class="row-fluid">
+        <div id="columna_1" class="span5">
+            <fieldset>
+                <legend>Información del Evento</legend>
+                <div id="show-event" class="content scaffold-show" role="main">
+
+                    <g:if test="${flash.message}">
+                        <div class="message" role="status">${flash.message}</div>
+                    </g:if>
+                    <ul class="property-list event">
+
+                        <g:if test="${eventInstance?.eventName}">
+                            <li class="fieldcontain">
+                                <span id="eventName-label" class="property-label"><g:message code="event.eventName.label" default="Event Name" /></span>
+
+                                <span class="property-value" aria-labelledby="eventName-label"><g:fieldValue bean="${eventInstance}" field="eventName"/></span>
+
+                            </li>
+                        </g:if>
+
+                        <g:if test="${eventInstance?.description}">
+                            <li class="fieldcontain">
+                                <span id="description-label" class="property-label"><g:message code="event.description.label" default="Description" /></span>
+
+                                <span class="property-value" aria-labelledby="description-label"><g:fieldValue bean="${eventInstance}" field="description"/></span>
+
+                            </li>
+                        </g:if>
+
+                        <g:if test="${eventInstance?.eventPlace}">
+                            <li class="fieldcontain">
+                                <span id="eventPlace-label" class="property-label"><g:message code="event.eventPlace.label" default="Event Place" /></span>
+
+                                <span class="property-value" aria-labelledby="description-label"><g:fieldValue bean="${eventInstance}" field="eventPlace"/></span>
+
+                            </li>
+                        </g:if>
+
+                        <g:if test="${eventInstance?.startDate}">
+                            <li class="fieldcontain">
+                                <span id="startDate-label" class="property-label"><g:message code="event.startDate.label" default="Start Date" /></span>
+
+                                <span class="property-value" aria-labelledby="startDate-label"><g:formatDate date="${eventInstance?.startDate}" format="dd/MM/yyyy" /></span>
+
+                            </li>
+                        </g:if>
+
+                        <g:if test="${eventInstance?.endDate}">
+                            <li class="fieldcontain">
+                                <span id="endDate-label" class="property-label"><g:message code="event.endDate.label" default="End Date" /></span>
+
+                                <span class="property-value" aria-labelledby="endDate-label"><g:formatDate date="${eventInstance?.endDate}" format="dd/MM/yyyy" /></span>
+
+                            </li>
+                        </g:if>
+
+                        <g:if test="${eventInstance?.type}">
+                            <li class="fieldcontain">
+                                <span id="type-label" class="property-label"><g:message code="event.type.label" default="Type of Event" /></span>
+
+                                <span class="property-value" aria-labelledby="type-label"><g:fieldValue bean="${eventInstance}" field="type"/></span>
+
+                            </li>
+                        </g:if>
+
+                        <g:if test="${eventInstance?.phase}">
+                            <li class="fieldcontain">
+                                <span id="phase-label" class="property-label"><g:message code="event.phase.label" default="Phase" /></span>
+                                <ul style="list-style-type: none; margin-left: 20px;">
+                                    <g:each in="${eventInstance.phase.sort{it.orderPhase}}" var="p">
+                                        %{--<li><span class="property-value" aria-labelledby="phase-label"><g:link controller="eventPhase" action="show" id="${p.id}">${p.phase?.encodeAsHTML()}</g:link></span></li>--}%
+                                        <li><span class="property-value" aria-labelledby="phase-label">${p.phase?.encodeAsHTML()}</span></li>
+                                    </g:each>
+                                </ul>
+
+
+                            </li>
+                        </g:if>
+
+                        <g:if test="${eventInstance?.phaseOrder}">
+                            <li class="fieldcontain">
+                                <span id="phaseOrder-label" class="property-label"><g:message code="event.phaseOrder.label" default="Phase Order" /></span>
+
+                                <span class="property-value" aria-labelledby="phaseOrder-label"><g:fieldValue bean="${eventInstance}" field="phaseOrder"/></span>
+
+                            </li>
+                        </g:if>
+                        <a href="${createLink(controller: 'event', action: 'inscription', id: eventInstance.id)}" target="_blank">Link de la Inscripción</a>
+                    </ul>
+                    
+                </div>
+            </fieldset>
+        </div>
+    </div>
+	</body>
+</html>

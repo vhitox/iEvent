@@ -1,0 +1,29 @@
+package ievent
+
+class Event {
+
+    String eventName
+    String description
+    String eventPlace
+    Date startDate
+    Date endDate
+    Integer phaseOrder
+    String type
+
+    String toString(){
+        return eventName
+    }
+
+    static constraints = {
+        eventName nullable: false, maxSize: 500
+        description nullable: true, maxSize: 3000
+        eventPlace nullable: true, maxSize: 500
+        startDate nullable: false
+        endDate nullable: true
+        phase nullable: true
+        phaseOrder nullable: true
+        type nullable: true, maxSize: 500, inList: ["Conferencia", "Seminario", "Feria", "Congreso"]
+    }
+
+    static hasMany = [phase: EventPhase, participants: Participants, groups: EventGroup]
+}

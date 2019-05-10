@@ -1,0 +1,59 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Vic
+  Date: 31/08/17
+  Time: 19:08
+  To change this template use File | Settings | File Templates.
+--%>
+
+<%@ page contentType="text/html;charset=UTF-8" %>
+<html>
+<head>
+    <meta name="layout" content="main">
+    <g:set var="entityName" value="${message(code: 'participant.label', default: 'Participats')}" />
+    <title><g:message code="default.participants.label" default="Participants" /></title>
+</head>
+<body>
+<div class="nav" role="navigation">
+    <ul>
+        <g:render template="/layouts/menu"/>
+    </ul>
+</div>
+<h1>${eventInstance.eventName}</h1>
+<div class="nav" role="navigation">
+    <g:render template="/layouts/eventMenu"/>
+</div>
+<script>
+    $( function() {
+        $( document ).tooltip({
+            track: true
+        });
+    } );
+</script>
+<h2><g:message code="default.participants.list.label" default="Participants List" /></h2>
+<table style="width: 800px;">
+    <thead>
+    <tr>
+        <th><g:message code="default.name.label" default="Names" /></th>
+        <th><g:message code="default.idNumberCi.label" default="ID" /></th>
+        <th><g:message code="default.unnity.min.label" default="Unity" /></th>
+        <th><g:message code="default.email.label" default="Email" /></th>
+        <th><g:message code="default.phone.label" default="Phone Number" /></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <g:each in="${eventInstance.participants}" var="participant">
+        <tr>
+            <td title="${message(code: 'default.country.label') +": "+ participant.country +" "+ message(code: 'default.city.label') +": "+ participant.city } "><g:link action="editParticipant" id="${participant.id}" >${participant.name+" "+participant.surnames}</g:link></td>
+            <td>${participant.idCardNumber}</td>
+            <td>${participant.unity}</td>
+            <td>${participant.email}</td>
+            <td>${participant.phoneNumber}</td>
+            <td><g:link action="editParticipant" id="${participant.id}">Edit</g:link> </td>
+        </tr>
+    </g:each>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,13 @@
+package ievent
+
+class HelpFunctionsTagLib {
+    static namespace = "t"
+
+    def outNull = {attrs, body ->
+        if (attrs.text!= null){
+            out<< attrs.text
+        }else{
+            out<< ""
+        }
+    }
+}

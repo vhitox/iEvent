@@ -1,0 +1,59 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Vic
+  Date: 30-08-17
+  Time: 09:52 AM
+  To change this template use File | Settings | File Templates.
+--%>
+
+<%@ page contentType="text/html;charset=UTF-8" %>
+<html>
+<head>
+    <meta name="layout" content="main">
+    <g:set var="entityName" value="${message(code: 'event.label', default: 'Event')}" />
+    <title><g:message code="default.inscription.label" default="Inscription" /></title>
+</head>
+<body>
+%{--<h1>${eventInstance.eventName}</h1>--}%
+
+<div id="layout_dos_columnas" class="row-fluid" style="margin-top: 20px;">
+    <div id="columna_1" class="span5">
+        %{--<h2>Por favor, complete el formulario</h2>--}%
+        <g:form name="Inscription" action="saveInscription">
+            <fieldset>
+                <legend><g:message code="default.personalInformation.label" default="Personal Information" /></legend>
+                <label><g:message code="default.name.label" default="Names" /></label>
+                <g:textField name="name"  maxlength="40" style="width: 350px" required="" />
+                <label><g:message code="default.surnames.label" default="Surnames" /></label>
+                <g:textField name="surnames"  maxlength="40" style="width: 350px" required="" />
+                <label><g:message code="default.idNumber.label" default="ID number" /></label>
+                <g:textField name="idCardNumber"  maxlength="40" style="width: 150px" required="" />
+                <label><g:message code="default.country.label" default="Country" /></label>
+                <g:textField name="country"  maxlength="40" style="width: 150px" />
+                <label><g:message code="default.city.label" default="City" /></label>
+                <g:textField name="city"  maxlength="40" style="width: 150px" />
+                <legend><g:message code="professional.information.label" default="Professional Information" /></legend>
+                <label><g:message code="default.unity.label" default="Institution" /></label>
+                <g:textField name="unity"  maxlength="40" style="width: 350px" required="" />
+                <label><g:message code="default.position.label" default="Position" /></label>
+                <g:textField name="position"  maxlength="40" style="width: 250px" />
+                <label><g:message code="default.profession.label" default="Profession" /></label>
+                <g:textField name="profession"  maxlength="40" style="width: 250px" />
+                <legend><g:message code="contact.information.label" default="Contact Information" /></legend>
+                <label><g:message code="default.email.label" default="Email" /></label>
+                <input type="email" name="email" id="email" maxlength="40" style="width: 200px" required="" />
+                <label><g:message code="default.phoneNumber.label" default="Phone Number" /></label>
+                <g:textField name="phoneNumber"  maxlength="40" style="width: 150px" />
+                <div>
+                    <g:hiddenField name="idEvent" value="${eventInstance.id}"/>
+                    <g:submitButton name="save" value="${message(code: 'default.saveInscription.label', default: 'Save Inscription')}" class="btn-info"/>
+                    <input type="reset" value="${message(code: 'default.reset.label', default: 'Save')}" class="btn-info">
+                </div>
+            </fieldset>
+        </g:form>
+    </div>
+    <div id="columna_2" class="span7">
+    </div>
+</div>
+</body>
+</html>

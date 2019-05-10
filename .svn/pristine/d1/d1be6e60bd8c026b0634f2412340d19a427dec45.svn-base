@@ -1,0 +1,15 @@
+package ievent
+
+class Phase {
+    String phaseName
+
+    String toString(){
+        return phaseName
+    }
+
+    static constraints = {
+        phaseName nullable: false, maxSize: 500
+    }
+
+    static hasMany = [event: EventPhase]
+}

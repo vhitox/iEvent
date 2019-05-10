@@ -1,0 +1,104 @@
+package ievent
+
+import org.springframework.dao.DataIntegrityViolationException
+
+class EventPhaseController {
+
+    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+
+    def index() {
+        redirect(action: "list", params: params)
+    }
+
+    def list() {
+        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+        [eventPhaseInstanceList: EventPhase.list(params), eventPhaseInstanceTotal: EventPhase.count()]
+    }
+
+    def create() {
+        def eventInstance = Event.read(params.id)
+        [eventPhaseInstance: new EventPhase(params), eventInstance: eventInstance]
+    }
+
+    def save() {
+        def eventPhaseInstance = new EventPhase(params)
+        if (!eventPhaseInstance.save(flush: true)) {
+            render(view: "create", model: [eventPhaseInstance: eventPhaseInstance])
+            return
+        }
+
+        flash.message = message(code: 'default.created.message', args: [message(code: 'eventPhase.label', default: 'EventPhase'), eventPhaseInstance.id])
+        redirect(action: "create", id: eventPhaseInstance.event.id)
+    }
+
+    def show() {
+        def eventPhaseInstance = EventPhase.get(params.id)
+        if (!eventPhaseInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'eventPhase.label', default: 'EventPhase'), params.id])
+            redirect(action: "list")
+            return
+        }
+
+        [eventPhaseInstance: eventPhaseInstance]
+    }
+
+    def edit() {
+        def eventPhaseInstance = EventPhase.get(params.id)
+        if (!eventPhaseInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'eventPhase.label', default: 'EventPhase'), params.id])
+            redirect(action: "list")
+            return
+        }
+
+        [eventPhaseInstance: eventPhaseInstance, eventInstance: eventPhaseInstance.event]
+    }
+
+    def update() {
+        def eventPhaseInstance = EventPhase.get(params.id)
+        if (!eventPhaseInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'eventPhase.label', default: 'EventPhase'), params.id])
+            redirect(action: "list")
+            return
+        }
+
+        if (params.version) {
+            def version = params.version.toLong()
+            if (eventPhaseInstance.version > version) {
+                eventPhaseInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
+                        [message(code: 'eventPhase.label', default: 'EventPhase')] as Object[],
+                        "Another user has updated this EventPhase while you were editing")
+                render(view: "edit", model: [eventPhaseInstance: eventPhaseInstance])
+                return
+            }
+        }
+
+        eventPhaseInstance.properties = params
+
+        if (!eventPhaseInstance.save(flush: true)) {
+            render(view: "edit", model: [eventPhaseInstance: eventPhaseInstance])
+            return
+        }
+
+        flash.message = message(code: 'default.updated.message', args: [message(code: 'eventPhase.label', default: 'EventPhase'), eventPhaseInstance.id])
+        redirect(action: "create", id: eventPhaseInstance.event.id)
+    }
+
+    def delete() {
+        def eventPhaseInstance = EventPhase.get(params.id)
+        if (!eventPhaseInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'eventPhase.label', default: 'EventPhase'), params.id])
+            redirect(action: "list")
+            return
+        }
+
+        try {
+            eventPhaseInstance.delete(flush: true)
+            flash.message = message(code: 'default.deleted.message', args: [message(code: 'eventPhase.label', default: 'EventPhase'), params.id])
+            redirect(action: "create", id: eventPhaseInstance.event.id)
+        }
+        catch (DataIntegrityViolationException e) {
+            flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'eventPhase.label', default: 'EventPhase'), params.id])
+            redirect(action: "show", id: params.id)
+        }
+    }
+}

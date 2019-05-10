@@ -1,0 +1,24 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Vic
+  Date: 2/09/17
+  Time: 12:16
+  To change this template use File | Settings | File Templates.
+--%>
+
+<ul>
+    <li><g:link controller="event" action="show" id="${eventInstance.id}"><g:img dir="images" file="eventinfo.png" title="Información del Evento" class="menu"/></g:link> </li>
+    <li><g:link controller="event" action="edit" id="${eventInstance.id}"><g:img dir="images" file="edit.png" title="Editar el Evento" class="menu"/></g:link> </li>
+    <li>
+        <g:form action="delete" onsubmit="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">
+            <g:hiddenField name="id" value="${eventInstance?.id}" />
+            <input type="image" src="${createLinkTo(dir: 'images', file: 'delete.png')}" class="input-menu" />
+        </g:form>
+    </li>
+    <g:img dir="images" file="to.png" class="menu"/>
+    <li><g:link controller="eventPhase" action="create" id="${eventInstance.id}"><g:img dir="images" file="phasetoevent.png" title="Agregar Etapas al Evento" class="menu"/></g:link> </li>
+    <li><g:link controller="event" action="controlParticipantList" id="${eventInstance.id}"><g:img dir="images" file="participantslist.png" title="Lista de Participantes Inscritos" class="menu"/></g:link></li>
+    <li><g:link controller="event" action="participantsControl" id="${eventInstance.id}" params="[currentPhase: eventInstance.phase.sort{it.id}.id[0]]"><g:img dir="images" file="participantscontrol.png" title="Control de Participantes" class="menu"/></g:link></li>
+    <li><g:link controller="event" action="printCodeBarParticipants" id="${eventInstance.id}" ><g:img dir="images" file="print.png" title="Imprimir Codigos de Barra de Participantes" class="menu"/></g:link></li>
+    <li><g:link controller="event" action="participantsPdfList" id="${eventInstance.id}" ><g:img dir="images" file="list.png" title="Imprimir Listas de participantes" class="menu"/></g:link></li>
+</ul>

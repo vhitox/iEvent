@@ -1,0 +1,13 @@
+package ievent
+
+class EventPhase {
+
+    Integer orderPhase
+
+    static constraints = {
+        orderPhase nullable: true
+    }
+
+    static belongsTo = [event: Event, phase:Phase]
+    static hasMany = [participant: ParticipantPhases]
+}

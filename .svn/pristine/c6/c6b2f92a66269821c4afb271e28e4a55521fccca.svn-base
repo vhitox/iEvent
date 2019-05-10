@@ -1,0 +1,45 @@
+<%@ page import="ievent.EventPhase" %>
+
+
+<div class="fieldcontain ${hasErrors(bean: eventPhaseInstance, field: 'event', 'error')} required">
+    <label for="event">
+        <g:message code="eventPhase.event.label" default="Event" />
+        <span class="required-indicator">*</span>
+    </label>
+    <g:hiddenField name="event.id" value="${eventInstance.id}"/>
+    %{--<g:select id="event" name="event.id" from="${ievent.Event.list()}" optionKey="id" required="" value="${eventPhaseInstance?.event?.id}" class="many-to-one" readonly="readonly"/>--}%
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: eventPhaseInstance, field: 'orderPhase', 'error')} ">
+	<label for="orderPhase">
+		<g:message code="eventPhase.orderPhase.label" default="Order Phase" />
+		
+	</label>
+	<g:field type="number" name="orderPhase" value="${eventPhaseInstance.orderPhase}" required="required"/>
+</div>
+
+%{--<div class="fieldcontain ${hasErrors(bean: eventPhaseInstance, field: 'participant', 'error')} ">
+	<label for="participant">
+		<g:message code="eventPhase.participant.label" default="Participant" />
+		
+	</label>
+	
+<ul class="one-to-many">
+<g:each in="${eventPhaseInstance?.participant?}" var="p">
+    <li><g:link controller="participantPhases" action="show" id="${p.id}">${p?.encodeAsHTML()}</g:link></li>
+</g:each>
+<li class="add">
+<g:link controller="participantPhases" action="create" params="['eventPhase.id': eventPhaseInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'participantPhases.label', default: 'ParticipantPhases')])}</g:link>
+</li>
+</ul>
+
+</div>--}%
+
+<div class="fieldcontain ${hasErrors(bean: eventPhaseInstance, field: 'phase', 'error')} required">
+	<label for="phase">
+		<g:message code="eventPhase.phase.label" default="Phase" />
+		<span class="required-indicator">*</span>
+	</label>
+	<g:select id="phase" name="phase.id" from="${ievent.Phase.list()}" optionKey="id" required="" value="${eventPhaseInstance?.phase?.id}" class="many-to-one"/>
+</div>
+

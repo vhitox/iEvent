@@ -1,0 +1,132 @@
+package ievent
+
+import org.springframework.dao.DataIntegrityViolationException
+import grails.plugins.springsecurity.Secured
+
+@Secured("ROLE_SUPERADMIN")
+class PhaseController {
+
+    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+
+    def index() {
+        redirect(action: "list", params: params)
+    }
+
+    @Secured(["ROLE_ADMIN","ROLE_SUPERADMIN"])
+    def list() {
+        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+        [phaseInstanceList: Phase.list(params), phaseInstanceTotal: Phase.count()]
+    }
+
+    @Secured(["ROLE_ADMIN","ROLE_SUPERADMIN"])
+    def create() {
+        [phaseInstance: new Phase(params)]
+    }
+
+    @Secured(["ROLE_ADMIN","ROLE_SUPERADMIN"])
+    def save() {
+        def phaseInstance = new Phase(params)
+        def file = request.getFile("file")
+        if (file.empty){
+            flash.message = "El archivo no fue subido"
+        }else{
+            phaseInstance.imagePhase = file.getBytes()
+            phaseInstance.imageName = file.originalFilename
+        }
+        if (!phaseInstance.save(flush: true)) {
+            render(view: "create", model: [phaseInstance: phaseInstance])
+            return
+        }
+
+		flash.message = message(code: 'default.created.message', args: [message(code: 'phase.label', default: 'Phase'), phaseInstance.id])
+        redirect(action: "show", id: phaseInstance.id)
+    }
+
+    @Secured(["ROLE_ADMIN","ROLE_SUPERADMIN"])
+    def show() {
+        def phaseInstance = Phase.get(params.id)
+        if (!phaseInstance) {
+			flash.message = message(code: 'default.not.found.message', args: [message(code: 'phase.label', default: 'Phase'), params.id])
+            redirect(action: "list")
+            return
+        }
+
+        [phaseInstance: phaseInstance]
+    }
+
+    @Secured(["ROLE_ADMIN","ROLE_SUPERADMIN"])
+    def edit() {
+        def phaseInstance = Phase.get(params.id)
+        if (!phaseInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'phase.label', default: 'Phase'), params.id])
+            redirect(action: "list")
+            return
+        }
+
+        [phaseInstance: phaseInstance]
+    }
+
+    @Secured(["ROLE_ADMIN","ROLE_SUPERADMIN"])
+    def update() {
+        def phaseInstance = Phase.get(params.id)
+        if (!phaseInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'phase.label', default: 'Phase'), params.id])
+            redirect(action: "list")
+            return
+        }
+
+        if (params.version) {
+            def version = params.version.toLong()
+            if (phaseInstance.version > version) {
+                phaseInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
+                          [message(code: 'phase.label', default: 'Phase')] as Object[],
+                          "Another user has updated this Phase while you were editing")
+                render(view: "edit", model: [phaseInstance: phaseInstance])
+                return
+            }
+        }
+
+        phaseInstance.properties = params
+        def file = request.getFile("file")
+        if (file.empty){
+            flash.message = "El archivo no fue subido"
+        }else{
+            phaseInstance.imagePhase = file.getBytes()
+            phaseInstance.imageName = file.originalFilename
+        }
+
+        if (!phaseInstance.save(flush: true)) {
+            render(view: "edit", model: [phaseInstance: phaseInstance])
+            return
+        }
+
+		flash.message = message(code: 'default.updated.message', args: [message(code: 'phase.label', default: 'Phase'), phaseInstance.id])
+        redirect(action: "show", id: phaseInstance.id)
+    }
+
+    @Secured(["ROLE_ADMIN","ROLE_SUPERADMIN"])
+    def delete() {
+        def phaseInstance = Phase.get(params.id)
+        if (!phaseInstance) {
+			flash.message = message(code: 'default.not.found.message', args: [message(code: 'phase.label', default: 'Phase'), params.id])
+            redirect(action: "list")
+            return
+        }
+
+        try {
+            phaseInstance.delete(flush: true)
+			flash.message = message(code: 'default.deleted.message', args: [message(code: 'phase.label', default: 'Phase'), params.id])
+            redirect(action: "list")
+        }
+        catch (DataIntegrityViolationException e) {
+			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'phase.label', default: 'Phase'), params.id])
+            redirect(action: "show", id: params.id)
+        }
+    }
+    
+    def showImage(){
+        def phaseInstance = Phase.get(params.id)
+        response.outputStream << phaseInstance.imagePhase
+        response.outputStream.flush()
+    }
+}
